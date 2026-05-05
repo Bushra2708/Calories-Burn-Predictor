@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Calories Predictor</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        /* ===== BODY ===== */
+        body {
+            margin: 0;
+            font-family: Arial;
+            background: #121212;
+            color: white;
+            overflow: hidden;
+        }
+
+        /* ===== FLOATING ICONS (MORE DENSITY) ===== */
+        .icon {
+            position: absolute;
+            font-size: 20px;
+            opacity: 0.07;
+            animation: float 14s infinite linear;
+            z-index: 0;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-60px) rotate(180deg);
+            }
+
+            100% {
+                transform: translateY(0px) rotate(360deg);
+            }
+        }
+
+        /* more icons added */
+        .i1 {
+            top: 8%;
+            left: 8%;
+        }
+
+        .i2 {
+            top: 15%;
+            right: 12%;
+        }
+
+        .i3 {
+            bottom: 18%;
+            left: 18%;
+        }
+
+        .i4 {
+            bottom: 10%;
+            right: 10%;
+        }
+
+        .i5 {
+            top: 45%;
+            left: 6%;
+        }
+
+        .i6 {
+            top: 60%;
+            right: 20%;
+        }
+
+        .i7 {
+            bottom: 35%;
+            left: 40%;
+        }
+
+        .i8 {
+            top: 30%;
+            left: 30%;
+        }
+
+        /* ===== LAYOUT ===== */
+        .wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            gap: 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .wrapper.shift {
+            justify-content: center;
+        }
+
+        /* ===== INPUT CARD ===== */
+        .card {
+            width: 450px;
+            padding: 25px;
+            background: rgba(30, 30, 30, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+        }
+
+        /* MORE SPACE BETWEEN INPUTS */
+        .card label {
+            display: block;
+            margin-top: 14px;
+            /* increased spacing */
+            font-size: 14px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 6px;
+            border-radius: 8px;
+            border: none;
+            background: #2a2a2a;
+            color: white;
+        }
+
+        /* dropdown fix */
+        select option {
+            background: #1e1e1e;
+        }
+
+        /* ===== BUTTON ===== */
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 22px;
+            background: linear-gradient(135deg, #4f46e5, #06b6d4);
+            border: none;
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        /* ===== OUTPUT CARD (SAME SIZE AS INPUT) ===== */
+        .right {
+            width: 450px;
+            /* SAME AS INPUT CARD */
+            height: 580px;
+            /* aligns visually */
+            padding: 25px;
+            background: rgba(20, 20, 20, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+            display: none;
+            text-align: center;
+        }
+
+        .wrapper.shift .right {
+            display: block;
+        }
+
+        /* result */
+        .result {
+            font-size: 26px;
+            color: #22c55e;
+            margin-bottom: 15px;
+        }
+
+        /* CHART SAME SIZE CENTERED */
+        canvas {
+            width: 100% !important;
+            height: 380px !important;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- FLOATING ICONS (MORE NOW) -->
+    <i class="fa-solid fa-fire icon i1"></i>
+    <i class="fa-solid fa-heart icon i2"></i>
+    <i class="fa-solid fa-bolt icon i3"></i>
+    <i class="fa-solid fa-dumbbell icon i4"></i>
+    <i class="fa-solid fa-stopwatch icon i5"></i>
+    <i class="fa-solid fa-person-running icon i6"></i>
+    <i class="fa-solid fa-fire-flame-curved icon i7"></i>
+    <i class="fa-solid fa-heart-pulse icon i8"></i>
+
+    <div id="wrap" class="wrapper">
+
+        <!-- INPUT -->
+        <div class="card">
+
+            <h2 style="text-align:center;">Calories Burn Predictor</h2>
+
+            <form action="/predict" method="post">
+
+                <label>Gender</label>
+                <select name="gender" required>
+                    <option value="">Select</option>
+                    <option value="0">Male</option>
+                    <option value="1">Female</option>
+                </select>
+
+                <label>Age(10-80 yrs)</label>
+                <input type="number" name="age" min="10" max="80" required>
+
+                <label>Height(150-200 cm)</label>
+                <input type="number" name="height" min="150" max="200" required>
+
+                <label>Weight(30-150 kg)</label>
+                <input type="number" name="weight" min="30" max="150" required>
+
+                <label>Duration(20-80 min)</label>
+                <input type="number" name="duration" min="20" max="80" required>
+
+                <label>Heart Rate(60-150 bpm)</label>
+                <input type="number" name="heart_rate" min="60" max="150" required>
+
+                <label>Body Temp(36-42 °C)</label>
+                <input type="number" step="0.1" name="body_temp" min="36" max="42" required>
+
+                <button type="submit">Predict</button>
+
+            </form>
+
+        </div>
+
+        <!-- OUTPUT -->
+        <div class="right">
+
+            <div class="result">
+                {{ prediction_text }}
+            </div>
+
+            <canvas id="chart"></canvas>
+
+        </div>
+
+    </div>
+
+    <!-- SCRIPT -->
+    {% if prediction_text %}
+    <script>
+        window.onload = function () {
+
+            document.getElementById("wrap").classList.add("shift");
+
+            confetti({
+                particleCount: 120,
+                spread: 80
+            });
+
+            const text = "{{ prediction_text }}";
+            const value = parseFloat(text.split(":")[1]);
+
+            new Chart(document.getElementById("chart"), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Calories Burned', 'Remaining'],
+                    datasets: [{
+                        data: [value, 500 - value],
+                        backgroundColor: ['#4f46e5', '#2a2a2a'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: "white",
+                                font: {
+                                    size: 16  
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+        }
+    </script>
+    {% endif %}
+
+</body>
+
+</html>
