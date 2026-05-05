@@ -1,0 +1,70 @@
+Model Evaluation Results
+
+Root Mean Square Error (RMSE):
+Linear Regression RMSE: 11.488940149152878
+Random Forest RMSE: 2.6610935596730405
+Decision Tree RMSE: 5.277499407863538
+
+R² Score (Accuracy)
+Linear Regression R² Score: 0.9672937151257295
+Random Forest R² Score: 0.9982453456842095
+Decision Tree R² Score: 0.9930987514700825
+
+Summary Table
+Model	                 RMSE	        R² Score
+Linear Regression	11.488940	0.967294
+Random Forest    	2.661094	0.998245
+Decision Tree   	5.277499	0.993099
+Best Model
+
+Random Forest Regressor
+(Best performance with lowest RMSE and highest R² score)
+
+Sample Inputs and Outputs
+Sample Input 1
+Gender: Male
+Age: 30
+Height: 170 cm
+Weight: 45 kg
+Duration: 30 min
+Heart Rate: 99 bpm
+Body Temperature: 39 °C
+
+Output
+Calories Burned: 147.15
+
+Sample Input 2
+Gender: Female
+Age: 25
+Height: 160 cm
+Weight: 55 kg
+Duration: 45 min
+Heart Rate: 110 bpm
+Body Temperature: 38.5 °C
+
+Output
+Calories Burned: 190.33
+
+Sample Input 3
+Gender: Male
+Age: 40
+Height: 175 cm
+Weight: 70 kg
+Duration: 60 min
+Heart Rate: 120 bpm
+Body Temperature: 39.2 °C
+
+Output
+Calories Burned: 233.17
+
+Sample Input 4
+Gender: Female
+Age: 22
+Height: 158 cm
+Weight: 50 kg
+Duration: 20 min
+Heart Rate: 95 bpm
+Body Temperature: 37.8 °C
+
+Output
+Calories Burned: 96.0
