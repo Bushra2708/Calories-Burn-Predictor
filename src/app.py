@@ -25,20 +25,34 @@ def predict():
         heart_rate = float(request.form["heart_rate"])
         body_temp = float(request.form["body_temp"])
 
-        # feature array (MUST match training order)
-        features = np.array([[gender, age, height, weight, duration, heart_rate, body_temp]])
+        # Feature array
+        features = np.array([[
+            gender,
+            age,
+            height,
+            weight,
+            duration,
+            heart_rate,
+            body_temp
+        ]])
 
-        # scale
+        # Scale input
         features_scaled = scaler.transform(features)
 
-        # predict
+        # Predict
         prediction = model.predict(features_scaled)[0]
         output = round(prediction, 2)
 
-        return render_template("index.html", prediction_text=f"Calories: {output}")
+        return render_template(
+            "index.html",
+            prediction_text=f"Calories Burned: {output}"
+        )
 
-    except Exception as e:
-        return render_template("index.html", prediction_text="Error: Invalid Input")
+    except Exception:
+        return render_template(
+            "index.html",
+            prediction_text="Error: Invalid Input"
+        )
 
 
 if __name__ == "__main__":

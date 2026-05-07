@@ -6,20 +6,42 @@
     <title>Calories Predictor</title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <style>
         /* ===== BODY ===== */
         body {
             margin: 0;
-            font-family: Arial;
+            font-family: Arial, sans-serif;
             background: #121212;
             color: white;
-            overflow: hidden;
+            overflow-y: auto;
+            overflow-x: hidden;
         }
 
-        /* ===== FLOATING ICONS (MORE DENSITY) ===== */
+        /* ===== HEADER ===== */
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 18px 0;
+            text-align: center;
+            background: rgba(18, 18, 18, 0.95);
+            backdrop-filter: blur(8px);
+            z-index: 10;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 30px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #4f46e5, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* ===== FLOATING ICONS ===== */
         .icon {
             position: absolute;
             font-size: 20px;
@@ -42,7 +64,6 @@
             }
         }
 
-        /* more icons added */
         .i1 {
             top: 8%;
             left: 8%;
@@ -87,15 +108,13 @@
         .wrapper {
             display: flex;
             justify-content: center;
-            align-items: center;
-            height: 100vh;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 120px 20px 40px;
             gap: 40px;
             position: relative;
             z-index: 1;
-        }
-
-        .wrapper.shift {
-            justify-content: center;
+            flex-wrap: wrap;
         }
 
         /* ===== INPUT CARD ===== */
@@ -107,11 +126,9 @@
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
         }
 
-        /* MORE SPACE BETWEEN INPUTS */
         .card label {
             display: block;
             margin-top: 14px;
-            /* increased spacing */
             font-size: 14px;
         }
 
@@ -124,9 +141,9 @@
             border: none;
             background: #2a2a2a;
             color: white;
+            box-sizing: border-box;
         }
 
-        /* dropdown fix */
         select option {
             background: #1e1e1e;
         }
@@ -141,45 +158,65 @@
             color: white;
             border-radius: 10px;
             cursor: pointer;
+            font-size: 15px;
+            transition: 0.3s;
         }
 
-        /* ===== OUTPUT CARD (SAME SIZE AS INPUT) ===== */
+        button:hover {
+            opacity: 0.9;
+            transform: scale(1.02);
+        }
+
+        /* ===== OUTPUT CARD ===== */
         .right {
             width: 450px;
-            /* SAME AS INPUT CARD */
-            height: 580px;
-            /* aligns visually */
+            min-height: 300px;
             padding: 25px;
             background: rgba(20, 20, 20, 0.95);
             border-radius: 15px;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
             display: none;
             text-align: center;
+
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
         }
 
         .wrapper.shift .right {
-            display: block;
+            display: flex;
         }
 
-        /* result */
+        /* ===== RESULT ===== */
         .result {
-            font-size: 26px;
+            font-size: 34px;
             color: #22c55e;
-            margin-bottom: 15px;
+            font-weight: bold;
         }
 
-        /* CHART SAME SIZE CENTERED */
-        canvas {
-            width: 100% !important;
-            height: 380px !important;
-            margin-top: 10px;
+        /* ===== RESPONSIVE ===== */
+        @media(max-width: 1000px) {
+            .wrapper {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .card,
+            .right {
+                width: 90%;
+            }
         }
     </style>
 </head>
 
 <body>
 
-    <!-- FLOATING ICONS (MORE NOW) -->
+    <!-- HEADER -->
+    <header class="header">
+        <h1>Calories Burn Predictor</h1>
+    </header>
+
+    <!-- FLOATING ICONS -->
     <i class="fa-solid fa-fire icon i1"></i>
     <i class="fa-solid fa-heart icon i2"></i>
     <i class="fa-solid fa-bolt icon i3"></i>
@@ -191,10 +228,10 @@
 
     <div id="wrap" class="wrapper">
 
-        <!-- INPUT -->
+        <!-- INPUT CARD -->
         <div class="card">
 
-            <h2 style="text-align:center;">Calories Burn Predictor</h2>
+            <h2 style="text-align:center;">Enter Your Details</h2>
 
             <form action="/predict" method="post">
 
@@ -205,38 +242,36 @@
                     <option value="1">Female</option>
                 </select>
 
-                <label>Age(10-80 yrs)</label>
+                <label>Age (10-80 yrs)</label>
                 <input type="number" name="age" min="10" max="80" required>
 
-                <label>Height(150-200 cm)</label>
+                <label>Height (150-200 cm)</label>
                 <input type="number" name="height" min="150" max="200" required>
 
-                <label>Weight(30-150 kg)</label>
+                <label>Weight (30-150 kg)</label>
                 <input type="number" name="weight" min="30" max="150" required>
 
-                <label>Duration(20-80 min)</label>
+                <label>Duration (20-80 min)</label>
                 <input type="number" name="duration" min="20" max="80" required>
 
-                <label>Heart Rate(60-150 bpm)</label>
+                <label>Heart Rate (60-150 bpm)</label>
                 <input type="number" name="heart_rate" min="60" max="150" required>
 
-                <label>Body Temp(36-42 °C)</label>
+                <label>Body Temp (36-42 °C)</label>
                 <input type="number" step="0.1" name="body_temp" min="36" max="42" required>
 
-                <button type="submit">Predict</button>
+                <button type="submit">Predict Calories</button>
 
             </form>
 
         </div>
 
-        <!-- OUTPUT -->
+        <!-- OUTPUT CARD -->
         <div class="right">
 
             <div class="result">
                 {{ prediction_text }}
             </div>
-
-            <canvas id="chart"></canvas>
 
         </div>
 
@@ -252,33 +287,6 @@
             confetti({
                 particleCount: 120,
                 spread: 80
-            });
-
-            const text = "{{ prediction_text }}";
-            const value = parseFloat(text.split(":")[1]);
-
-            new Chart(document.getElementById("chart"), {
-                type: 'doughnut',
-                data: {
-                    labels: ['Calories Burned', 'Remaining'],
-                    datasets: [{
-                        data: [value, 500 - value],
-                        backgroundColor: ['#4f46e5', '#2a2a2a'],
-                        borderWidth: 0
-                    }]
-                },
-                options: {
-                    plugins: {
-                        legend: {
-                            labels: {
-                                color: "white",
-                                font: {
-                                    size: 16  
-                                }
-                            }
-                        }
-                    }
-                }
             });
 
         }
